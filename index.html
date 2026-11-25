@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASCIIquarium Deluxe — Bể Cá Nghệ Thuật Ký Tự Trực Tuyến</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="theme-ubuntu">
+  <!-- Top OS Desktop Bar (Ubuntu GNOME style) -->
+  <header class="os-topbar" id="osTopbar">
+    <div class="os-left">
+      <span class="os-pill active">Activities</span>
+      <span class="os-app-title">
+        <span class="dot-indicator"></span>
+        Terminal — asciiquarium --deluxe --species=22
+      </span>
+    </div>
+    <div class="os-center" id="osClock">Wed Nov 25 17:02</div>
+    <div class="os-right">
+      <span class="os-badge" id="creatureCountBadge">🐟 24 sinh vật</span>
+      <span class="os-badge" id="fpsBadge">60 FPS</span>
+      <button class="os-icon-btn" id="btnHelp" title="Danh sách 22 sinh vật & Hướng dẫn (?)">?</button>
+      <button class="os-icon-btn" id="btnHideHud" title="Ẩn thanh công cụ (Phím H)">⛶</button>
+    </div>
+  </header>
+
+  <!-- Main Terminal Window -->
+  <main class="desktop-stage" id="desktopStage">
+    <section class="terminal-window" id="terminalWindow">
+      <!-- Terminal Title Bar -->
+      <div class="terminal-header">
+        <div class="window-controls">
+          <span class="win-btn close" title="Làm mới bể cá" id="btnReset"></span>
+          <span class="win-btn minimize" title="Ẩn HUD (Phím H)" id="btnMinimize"></span>
+          <span class="win-btn maximize" title="Toàn màn hình (Phím F)" id="btnMaximize"></span>
+        </div>
+        <div class="terminal-tabs">
+          <div class="tab active">
+            <span class="tab-icon">&gt;_</span>
+            <span>aquarium@ocean: ~/asciiquarium --ecosystem=deluxe</span>
+          </div>
+          <div class="tab secondary" id="btnSpawnMenu">
+            <span>+ Thả từng loài (22 loài)</span>
+          </div>
+        </div>
+        <div class="terminal-actions-mini">
+          <span class="hint-text">Click mặt nước để cho cá ăn • Phím <b>H</b> ẩn UI</span>
+        </div>
+      </div>
+
+      <!-- Boot Terminal Overlay -->
+      <div class="boot-overlay" id="bootOverlay">
+        <div class="boot-text" id="bootText"></div>
+      </div>
+
+      <!-- Aquarium Canvas Container -->
+      <div class="canvas-wrapper" id="canvasWrapper">
+        <canvas id="aquariumCanvas"></canvas>
+        <div class="crt-scanlines" aria-hidden="true"></div>
+        <div class="water-vignette" aria-hidden="true"></div>
+
+        <!-- Floating Quick Spawn Popover -->
+        <div class="spawn-popover hidden" id="spawnPopover">
+          <div class="popover-header">
+            <span>🐠 Chọn sinh vật thả vào bể</span>
+            <button id="closePopover" aria-label="Đóng">✕</button>
+          </div>
+          <div class="spawn-grid" id="spawnGrid"></div>
+        </div>
+      </div>
+
+      <!-- Interactive Control Dock -->
+      <footer class="control-dock" id="controlDock">
+        <div class="dock-group">
+          <button class="dock-btn primary" id="btnFeed" title="Rải thức ăn khắp bể (Phím Space)">
+            <span>🍤</span> Cho ăn
+          </button>
+          <button class="dock-btn" id="btnAddFish" title="Thêm đàn cá nhiệt đới ngẫu nhiên">
+            <span>🐠</span> + Đàn cá
+          </button>
+          <button class="dock-btn" id="btnAddShark" title="Gọi Cá Mập / Kỳ Lân Biển">
+            <span>🦈</span> + Cá mập
+          </button>
+          <button class="dock-btn" id="btnAddWhale" title="Gọi Cá Voi / Thuyền Buồm">
+            <span>🐋</span> + Cá voi / Tàu
+          </button>
+          <button class="dock-btn" id="btnAddJelly" title="Thêm Sứa, Rùa, Cá Heo & Tiên Cá">
+            <span>🐬</span> + Sinh vật hiếm
+          </button>
+          <button class="dock-btn" id="btnBubbles" title="Tạo luồng bong bóng lớn (Phím B)">
+            <span>🫧</span> Bong bóng
+          </button>
+        </div>
+
+        <div class="dock-divider"></div>
+
+        <div class="dock-group">
+          <label class="theme-selector-wrap" title="Đổi giao diện màu sắc">
+            <span>🎨</span>
+            <select id="themeSelect">
+              <option value="ubuntu">Ubuntu Terminal (Tím)</option>
+              <option value="abyss">Biển Sâu Phát Quang</option>
+              <option value="reef">Rạn San Hô Nhiệt Đới</option>
+              <option value="crt">Màn Hình CRT Xanh Cổ Điển</option>
+              <option value="cyber">Cyberpunk Neon</option>
+            </select>
+          </label>
+
+          <button class="dock-btn" id="btnGlow" title="Bật/tắt hiệu ứng phát sáng Neon">
+            <span>✨</span> Phát sáng: <b id="glowState">BẬT</b>
+          </button>
+
+          <button class="dock-btn" id="btnSound" title="Bật/tắt âm thanh đại dương">
+            <span id="soundIcon">🔇</span> <span id="soundState">Âm thanh</span>
+          </button>
+        </div>
+      </footer>
+    </section>
+  </main>
+
+  <!-- Floating Restore Button when HUD is hidden -->
+  <button class="floating-restore hidden" id="btnRestoreHud" title="Hiện lại thanh điều khiển (Phím H)">
+    ⌘ Hiện điều khiển
+  </button>
+
+  <!-- Species Encyclopedia & Shortcuts Modal -->
+  <div class="modal-backdrop hidden" id="helpModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>🌊 Bách Khoa Sinh Vật ASCIIquarium Deluxe (22 Loài)</h2>
+        <button class="modal-close" id="closeHelpModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-intro">
+          Lấy cảm hứng từ lệnh <code>asciiquarium</code> kinh điển trên Linux Terminal, phiên bản web nâng cấp với hiệu ứng ánh sáng dưới nước, vật lý dòng chảy, và hệ sinh thái 22 loài sinh vật biển & tàu thuyền ASCII đa sắc màu.
+        </p>
+
+        <div class="shortcut-bar">
+          <span><kbd>Click</kbd> Thả mồi / Chọc cá nóc</span>
+          <span><kbd>Space</kbd> Rải thức ăn</span>
+          <span><kbd>H</kbd> Chế độ Screensaver</span>
+          <span><kbd>F</kbd> Toàn màn hình</span>
+          <span><kbd>B</kbd> Phun bong bóng</span>
+        </div>
+
+        <h3>Danh mục 22 sinh vật & phương tiện trong bể</h3>
+        <div class="encyclopedia-grid" id="encyclopediaGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/creatures.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/engine.js"></script>
+</body>
+</html>
